@@ -29,7 +29,7 @@ module.exports = function (RED) {
     this.serverPort = parseInt(config.serverPort)
     this.responseDelay = parseInt(config.responseDelay)
     this.delayUnit = config.delayUnit
-    this.unitId = parseInt(config.unitId) || 1
+    this.unitId = parseInt(config.unitId) || null
     this.minAddress = parseInt(config.minAddress) || 0
     this.splitAddress = parseInt(config.splitAddress) || 10000
     this.showErrors = config.showErrors
@@ -66,7 +66,7 @@ module.exports = function (RED) {
     node.vector = {}
 
     const vm = new VM({
-      sandbox: { node }
+      sandbox: { node, console }
     })
 
     vm.run('node.vector.getCoil = ' + config.funcGetCoil)
@@ -160,17 +160,17 @@ module.exports = function (RED) {
       ]
     }
 
-    node.on('close', function () {
+    node.on('close', function (done) {
       mbBasics.setNodeStatusTo('closed', node)
-      if (node.modbusServer._server) {
-        node.modbusServer._server.close()
-      }
+      node.modbusServer.close(()=>{
+        done()
+      })
       node.modbusServer = null
     })
   }
 
   try {
-    RED.nodes.registerType('modbus-flex-server', ModbusFlexServer)
+    RED.nodes.registerType('modbus-flex-server-multi-id', ModbusFlexServer)
   } catch (err) {
     internalDebugLog(err.message)
   }

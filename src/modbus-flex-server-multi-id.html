@@ -6,7 +6,7 @@
  @author <a href="mailto:klaus.landsdorf@bianco-royal.de">Klaus Landsdorf</a> (Bianco Royal)
 -->
 <script type="text/javascript">
-  RED.nodes.registerType('modbus-flex-server', {
+  RED.nodes.registerType('modbus-flex-server-multi-id', {
     category: 'modbus',
     color: '#E9967A',
     defaults: {
@@ -15,7 +15,7 @@
       serverAddress: {value: '0.0.0.0'},
       serverPort: {value: 11502, required: true, validate: RED.validators.number()},
       responseDelay: {value: 100, required: true, validate: RED.validators.number()},
-      unitId: {value: 1, required: true, validate: RED.validators.number()},
+      unitId: {},
       delayUnit: {
         value: 'ms', required: true, validate: function (v) {
           return 'ms' == v || 's' == v || 'm' == v || 'h' == v
@@ -37,7 +37,7 @@
     outputs: 5,
     align: "right",
     icon: 'modbus.png',
-    paletteLabel: 'Modbus-Flex-Server',
+    paletteLabel: 'Modbus-Flex-Server-Multi-ID',
     label: function () {
       return this.name || 'Modbus Flex Server'
     },
@@ -272,7 +272,7 @@
 </script>
 
 
-<script type="text/x-red" data-template-name="modbus-flex-server">
+<script type="text/x-red" data-template-name="modbus-flex-server-multi-id">
     <div class="form-row">
         <ul style="background: #fff; min-width: 600px; margin-bottom: 20px;" id="node-input-connector-tabs"></ul>
     </div>
@@ -391,7 +391,7 @@
 </script>
 
 
-<script type="text/x-red" data-help-name="modbus-flex-server">
+<script type="text/x-red" data-help-name="modbus-flex-server-multi-id">
     <p>Node to provide a flexible Modbus TCP server based on modbus-serial for testing.</p>
 
     <p>

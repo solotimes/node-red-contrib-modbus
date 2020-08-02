@@ -76,7 +76,6 @@ de.biancoroyal.modbus.core.server.writeModbusFlexServerMemory = function (node, 
   const coreServer = de.biancoroyal.modbus.core.server
   msg.bufferSplitAddress = (parseInt(msg.payload.address) + parseInt(node.splitAddress)) * coreServer.bufferFactor
   msg.bufferAddress = parseInt(msg.payload.address) * coreServer.bufferFactor
-
   if (coreServer.convertInputForBufferWrite(msg)) {
     return coreServer.copyToModbusFlexBuffer(node, msg)
   } else {
