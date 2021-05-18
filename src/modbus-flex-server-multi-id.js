@@ -84,8 +84,8 @@ module.exports = function (RED) {
             node.modbusServer = new ModbusRTU.ServerTCP(node.vector, {
               host: node.serverAddress,
               port: node.serverPort,
-              debug: node.logEnabled,
-              unitID: node.unitId
+              unitID: node.unitId,
+              // debug: true
             })
           } catch (err) {
             node.error(err, { payload: 'server net error -> for port 502 on unix, you have to be a super user' })

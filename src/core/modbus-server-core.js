@@ -11,7 +11,7 @@
 var de = de || { biancoroyal: { modbus: { core: { server: { } } } } } // eslint-disable-line no-use-before-define
 de.biancoroyal.modbus.core.server.internalDebug = de.biancoroyal.modbus.core.server.internalDebug || require('debug')('contribModbus:core:server') // eslint-disable-line no-use-before-define
 
-de.biancoroyal.modbus.core.server.bufferFactor = 8
+de.biancoroyal.modbus.core.server.bufferFactor = 1
 de.biancoroyal.modbus.core.server.memoryTypes = ['holding', 'coils', 'input', 'discrete']
 de.biancoroyal.modbus.core.server.memoryUint16Types = ['holding', 'input']
 de.biancoroyal.modbus.core.server.memoryUint8Types = ['coils', 'discrete']
@@ -55,13 +55,13 @@ de.biancoroyal.modbus.core.server.copyToModbusFlexBuffer = function (node, msg) 
 de.biancoroyal.modbus.core.server.writeToModbusFlexBuffer = function (node, msg) {
   switch (msg.payload.register) {
     case 'holding':
-      node.registers.writeUInt16BE(msg.bufferPayload, msg.bufferSplitAddress)
+      node.registers.writeUInt8(msg.bufferPayload, msg.bufferSplitAddress)
       break
     case 'coils':
       node.coils.writeUInt8(msg.bufferPayload, msg.bufferAddress)
       break
     case 'input':
-      node.registers.writeUInt16BE(msg.bufferPayload, msg.bufferAddress)
+      node.registers.writeUInt8(msg.bufferPayload, msg.bufferAddress)
       break
     case 'discrete':
       node.coils.writeUInt8(msg.bufferPayload, msg.bufferSplitAddress)
@@ -121,13 +121,13 @@ de.biancoroyal.modbus.core.server.copyToModbusBuffer = function (node, msg) {
 de.biancoroyal.modbus.core.server.writeToModbusBuffer = function (node, msg) {
   switch (msg.payload.register) {
     case 'holding':
-      node.modbusServer.holding.writeUInt16BE(msg.bufferPayload, msg.bufferAddress)
+      node.modbusServer.holding.writeUInt8(msg.bufferPayload, msg.bufferAddress)
       break
     case 'coils':
       node.modbusServer.coils.writeUInt8(msg.bufferPayload, msg.bufferAddress)
       break
     case 'input':
-      node.modbusServer.input.writeUInt16BE(msg.bufferPayload, msg.bufferAddress)
+      node.modbusServer.input.writeUInt8(msg.bufferPayload, msg.bufferAddress)
       break
     case 'discrete':
       node.modbusServer.discrete.writeUInt8(msg.bufferPayload, msg.bufferAddress)
@@ -140,7 +140,6 @@ de.biancoroyal.modbus.core.server.writeToModbusBuffer = function (node, msg) {
 de.biancoroyal.modbus.core.server.writeModbusServerMemory = function (node, msg) {
   const coreServer = de.biancoroyal.modbus.core.server
   msg.bufferAddress = parseInt(msg.payload.address) * coreServer.bufferFactor
-
   if (coreServer.convertInputForBufferWrite(msg)) {
     return coreServer.copyToModbusBuffer(node, msg)
   } else {
