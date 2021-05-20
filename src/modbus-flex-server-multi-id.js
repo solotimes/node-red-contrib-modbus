@@ -11,10 +11,12 @@
  *
  * @param RED
  */
+const ServerTCP = require('./server/modbus-rtu-server')
 module.exports = function (RED) {
   'use strict'
   // SOURCE-MAP-REQUIRED
-  const ModbusRTU = require('modbus-serial')
+  // const ModbusRTU = require('modbus-serial')
+  // const ServerTCP = require('./server/modbus-rtu-server')
   const coreServer = require('./core/modbus-server-core')
   const mbBasics = require('./modbus-basics')
   const internalDebugLog = require('debug')('contribModbus:flex:server')
@@ -81,11 +83,11 @@ module.exports = function (RED) {
       try {
         if (node.modbusServer === null) {
           try {
-            node.modbusServer = new ModbusRTU.ServerTCP(node.vector, {
+            node.modbusServer = new ServerTCP(node.vector, {
               host: node.serverAddress,
               port: node.serverPort,
               unitID: node.unitId,
-              // debug: true
+              debug: true
             })
           } catch (err) {
             node.error(err, { payload: 'server net error -> for port 502 on unix, you have to be a super user' })
